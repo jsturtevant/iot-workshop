@@ -1,0 +1,147 @@
+﻿/*modified from https://github.com/Azure-Samples/MyDriving MIT license */
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "iotHubSku": {
+      "type": "object",
+      "defaultValue": {
+        "name": "F1",
+        "tier": "Free",
+        "capacity": 1
+      }
+    },
+    "storageAccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [ "Standard_LRS", "Standard_ZRS", "Standard_GRS", "Standard_RAGRS", "Premium_LRS" ]
+    }
+  },
+  "variables": {
+    "baseName": "rockstepiot",
+    /* Storage settings*/
+    "blobStorageAnalytics": "[substring(toLower(concat(variables('baseName'), 'str', uniquestring(resourceGroup().id), '0000000000')), 0, 24)]",
+    "rawDataContainerName": "rawdata",
+    /* IoT Hub settings */
+    "iotHubName": "[concat(variables('baseName'), '-', uniquestring(resourceGroup().id))]",
+    "iotHubKeyName": "iothubowner",
+    /* ASA Job settings */
+    "archiveJobName": "[concat(variables('baseName'), '-archive')]",
+    "archiveJobQuery": "TODO",
+    "archiveJobConsumerGroupName": "asa-blobarchive"
+  },
+  "resources": [
+    /* Create Storage Account - Analytics */
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('blobStorageAnalytics')]",
+      "location": "[resourceGroup().location]",
+      "properties": { "accountType": "[parameters('storageAccountType')]" }
+    },
+    /* Create IoT Hub */
+    {
+      "apiVersion": "2016-02-03",
+      "type": "Microsoft.Devices/IotHubs",
+      "name": "[variables('iotHubName')]",
+      "location": "[resourceGroup().location]",
+      "sku": "[parameters('iotHubSku')]"
+    },
+    /* Create IoT Hub Consumer Groups */
+    {
+      "apiVersion": "2016-02-03",
+      "name": "[concat(variables('iotHubName'), '/events/', variables('archiveJobConsumerGroupName'))]",
+      "type": "Microsoft.Devices/Iothubs/eventhubEndpoints/ConsumerGroups",
+      "dependsOn": [
+        "[concat('Microsoft.Devices/Iothubs/', variables('iotHubName'))]"
+      ]
+    },
+    /* Create ASA Jobs */
+    /* ASA Job: Archive */
+    {
+      "apiVersion": "2015-09-01",
+      "type": "Microsoft.StreamAnalytics/StreamingJobs",
+      "name": "[variables('archiveJobName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        /* The only supported value for ASA sku is standard https://msdn.microsoft.com/en-us/library/azure/dn834994.aspx */
+        "sku": { "name": "Standard" },
+        "inputs": [
+          {
+            "name": "DeviceData",
+            "properties": {
+              "type": "stream",
+              "serialization": {
+                "type": "JSON",
+                "properties": { "encoding": "UTF8" }
+              },
+              "datasource": {
+                "type": "Microsoft.Devices/IotHubs",
+                "properties": {
+                  "iotHubNamespace": "[variables('iotHubName')]",
+                  "sharedAccessPolicyName": "[variables('iotHubKeyName')]",
+                  "sharedAccessPolicyKey": "[listKeys(resourceId('Microsoft.Devices/IotHubs/Iothubkeys', variables('iotHubName'), variables('iotHubKeyName')), '2016-02-03').primaryKey]",
+                  "consumerGroupName": "[variables('archiveJobConsumerGroupName')]"
+                }
+              }
+            }
+          }
+        ],
+        "transformation": {
+          "name": "[variables('archiveJobName')]",
+          "properties": {
+            "streamingUnits": 1,
+            "query": "[variables('archiveJobQuery')]"
+          }
+        },
+        "outputs": [
+          {
+            "name": "BlobSink",
+            "properties": {
+              "serialization": {
+                "type": "CSV",
+                "properties": {
+                  "fieldDelimiter": ",",
+                  "encoding": "UTF8"
+                }
+              },
+              "datasource": {
+                "type": "Microsoft.Storage/Blob",
+                "properties": {
+                  "storageAccounts": [
+                    {
+                      "accountName": "[variables('blobStorageAnalytics')]",
+                      "accountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('blobStorageAnalytics')), '2015-06-15').key1]"
+                    }
+                  ],
+                  "container": "[variables('rawDataContainerName')]",
+                  "pathPattern": "tripdata/{date}",
+                  "dateFormat": "yyyy/MM/dd",
+                  "timeFormat": "HH"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Devices/IotHubs', variables('iotHubName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('blobStorageAnalytics'))]"
+      ]
+    } 
+  ],
+  "outputs": {
+    "storageAccountNameAnalytics": {
+      "type": "string",
+      "value": "[variables('blobStorageAnalytics')]"
+    },
+    "storageAccountKeyAnalytics": {
+      "type": "string",
+      "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('blobStorageAnalytics')), '2015-06-15').key1]"
+    },
+    "rawdataContainerName": {
+      "type": "string",
+      "value": "[variables('rawDataContainerName')]"
+    }
+  }
+}

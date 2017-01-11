@@ -1,0 +1,9 @@
+﻿/*modified from https://github.com/Azure-Samples/MyDriving MIT license */
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "iotHubSku": { "value": { "name": "F1", "tier": "Free", "capacity": 1 } },
+    "storageAccountType": { "value": "Standard_LRS" }
+  }
+}

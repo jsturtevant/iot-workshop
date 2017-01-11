@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceManagement", "DeviceManagement\DeviceManagement.csproj", "{87771798-2574-406C-BA53-269924044015}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTHubProcessor", "IoTHubProcessor\IoTHubProcessor.csproj", "{491D1DCF-71B1-417E-8BEC-C81C3E1587C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceSimulator", "DeviceSimulator\DeviceSimulator.csproj", "{69297BF5-543D-47F0-9A10-007410135B8A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{87771798-2574-406C-BA53-269924044015}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87771798-2574-406C-BA53-269924044015}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87771798-2574-406C-BA53-269924044015}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87771798-2574-406C-BA53-269924044015}.Release|Any CPU.Build.0 = Release|Any CPU
+		{491D1DCF-71B1-417E-8BEC-C81C3E1587C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{491D1DCF-71B1-417E-8BEC-C81C3E1587C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{491D1DCF-71B1-417E-8BEC-C81C3E1587C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{491D1DCF-71B1-417E-8BEC-C81C3E1587C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69297BF5-543D-47F0-9A10-007410135B8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69297BF5-543D-47F0-9A10-007410135B8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69297BF5-543D-47F0-9A10-007410135B8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69297BF5-543D-47F0-9A10-007410135B8A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8
+	EndGlobalSection
+EndGlobal
