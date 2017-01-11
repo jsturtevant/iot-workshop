@@ -25,11 +25,11 @@ The Pre-requisites for the workshop are:
 ## Create an IoT Hub in Azure
 Log into your portal at http://portal.azure.com and create a new IoT Hub by clicking on ```Plus sign->Internet Of Things->Iot Hub```:
 
-![new iot hub in portal](iot-new-iot-hub-portal.png)
+![new iot hub in portal](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-new-iot-hub-portal.png)
 
 Next fill in the information on the IoT Hub Create Blade.  For the workshop select the ```Pricing and scale tier``` of free.  Create a new resource group called ```iot-workshop``` which we will place all our Azure resources in for this workshop and select a location near you.  Click ```Create``` and in a few minutes you will have your IoT Configured.
 
-![create new iot hub](iot-new-iot-hub-create.png)
+![create new iot hub](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-new-iot-hub-create.png)
 
 ## Create Simulated device
 In this section we will [register a device in Azure IoT hub](#register-device) and then create a simulated device using the Node.Js (there are [c# samples here]().
@@ -39,7 +39,7 @@ Azure IoT hub has management API that can use to register devices and can be cus
 
 Get your Azure IoT Connection String from the portal ```All Resources->Select your IoT Hub->Shared Access policies```.  Here for the IoT Hub Explorer we will choose the connection string for the ```iothubowner``` to have full control but when working with other connections you should select the least  policy needed.
 
-![get azure IoT Hub connection string](iot-new-iot-hub-connectionstring.png)
+![get azure IoT Hub connection string](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-new-iot-hub-connectionstring.png)
 
 Once you have the tool installed open a command prompt and login to your IoT Hub:
 
@@ -132,7 +132,7 @@ Install all the dependencies by running ```npm install```.
 
 Get your Device Connection string either from the command line when you created the device with the IoT Hub Explorer or in the portal at:
 
-![device connection string in portal](iot-new-iot-hub-device-connectionstring.png)
+![device connection string in portal](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-new-iot-hub-device-connectionstring.png)
 
 Update the connection string in the ```simulatedDevice.js``` file.
 
@@ -161,12 +161,12 @@ In many IoT solutions it is common to have a Hot and Cold path.  In the cold pat
 
 To create a Azure Stream Analytics job open the Azure portal and click ```Plus sign->Internet Of Things->Stream Analytics job```.  Give the job a name and it to the same resource group and region as before.  Then click ```Create``` and shortly you will have a new job.
 
-![create azure stream analytics job](iot-new-azure-stream-analytics-job.png)
+![create azure stream analytics job](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-new-azure-stream-analytics-job.png)
 
 ### Add IoT Hub Input
 Adding the IoT Hub input is easy as Azure has a fast integration setup between Azure Stream Analytics and Azure IoT Hub.  Click ```All resources->your stream analytics job -> overview -> inputs -> Add```.  Fill in the information for the Input using the IoT Hub from this subscription, use the ```service``` shared access policy and click create.  Optionally you could create a new Consumer Group in IoT hub for this instance of Azure Stream Analytics and selected that in this input creation.  Learn more about [device messaging](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-messaging) and [consumer groups](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-overview.)  
 
-![create azure stream analytics iothub input](iot-new-azure-stream-analytics-job-iot-input.png)
+![create azure stream analytics iothub input](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-new-azure-stream-analytics-job-iot-input.png)
 
 ## Add Cold Path 
 To store data for later processing we will create a storage account and dump all the telemetry data to blob storage.  Later we could add 
@@ -175,12 +175,12 @@ optional processing on that data for analytics with things like Azure Data Facto
 ### Blob Storage output
 Create an Azure Stream analytics Output with blob storage.  You could use your own storage if you already have an existing.  In the case of the workshop we will create our own:
 
-![azure stream analytics blob storage cold path output](iot-new-azure-stream-analytics-job-cold-output.png)
+![azure stream analytics blob storage cold path output](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-new-azure-stream-analytics-job-cold-output.png)
 
 ### Create query for cold path
 Next we need to write our query to move all the data from IoT Hub to the blob storage. 
 
-![cold path query](iot-new-azure-stream-analytics-job-cold-output-query.png)
+![cold path query](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-new-azure-stream-analytics-job-cold-output-query.png)
 
 ## Add Hot Path
 On the hot path we will do something a bit more interesting with our query to only trigger an event if the temperature is over 80 degrees.
@@ -188,17 +188,17 @@ On the hot path we will do something a bit more interesting with our query to on
 ### Create Azure Queue 
 To store events we will you an Azure Queue. Depending on the scenario you can either use a Queue or EventHub.  
 
-![azure stream analytics queue hot path output](iot-new-azure-stream-analytics-job-hot-output.png)
+![azure stream analytics queue hot path output](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-new-azure-stream-analytics-job-hot-output.png)
 
 ### Create query for Hot Path
 Next we need to write our query to trigger an alert for any temperature over 80 degrees.
 
-![hot path query](iot-new-azure-stream-analytics-job-hot-output-query.png)
+![hot path query](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-new-azure-stream-analytics-job-hot-output-query.png)
 
 ### Start Azure Stream Analytics
 Now that we have all of our inputs, outputs, and queries created we can start the job.  Note that you can not edit the job while it is running.  It takes a few moments to start the job.
 
-![start job](iot-new-azure-stream-analytics-job-start.png)
+![start job](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-new-azure-stream-analytics-job-start.png)
 
 ### Review Cold path data
 You can use the [Azure Storage Explorer](http://storageexplorer.com/) to view the data from the cold path.
@@ -208,8 +208,8 @@ There are many ways to process the data for the Hot Path.  One of the easiest wi
 
 Create a new Azure Function App:
 
-![azure function app](iot-function-app.png)
+![azure function app](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-function-app.png)
 
 Create a new function for Service Bus Queue.  You will need to get your Service Bus Queue connection string (todo).
 
-![azure function app function for service ](iot-function-app-create-function.png)
+![azure function app function for service ](https://github.com/jsturtevant/iot-workshop/blob/master/images/iot-function-app-create-function.png)
