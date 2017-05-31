@@ -3,7 +3,7 @@
 var clientFromConnectionString = require('azure-iot-device-amqp').clientFromConnectionString;
 var Message = require('azure-iot-device').Message;
 
-var connectionString = 'HostName=<hubname>.azure-devices.net;DeviceId=<deviceId>;SharedAccessKey=<yourkey>';
+var connectionString = '';
 
 var client = clientFromConnectionString(connectionString);
 
@@ -19,6 +19,17 @@ var connectCallback = function (err) {
     console.log('Could not connect: ' + err);
   } else {
     console.log('Client connected');
+
+    // send random temp message every second
+    setInterval(function(){
+        var temp = 70 + (Math.random() * 20);
+        var data = JSON.stringify({ deviceId: 'simulatedDevice', temp: temp });
+        
+        var message = new Message(data);
+        console.log("Sending message: " + message.getData());
+        client.sendEvent(message, printResultFor('send'));
+    }, 1000);
+
 
     // set up Device listening for C2D
     client.on('message', function (msg) {
